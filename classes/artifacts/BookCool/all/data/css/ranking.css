@@ -1,0 +1,120 @@
+.chartsSame a:hover{
+  color: #e52a2a;
+}
+.chartsSame{
+  width: 270px;
+  height: 550px;
+  padding: 0 24px;
+  padding-top: 10px;
+  background-color: #fafafa;
+  border: 1px solid #e6e6e6;
+}
+/* 姒滃崟绗竴琛� */
+.ListFirst{
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #e6e6e6;
+}
+.ListFirst a{
+  font-size: 12px;
+  color: #999;
+  float: right;
+}
+.ListFirst h3{
+  font-weight: bold;
+}
+.booksNo_01{
+  height: 120px;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6;
+}
+/* 鏂囨湰鏍峰紡 */
+.bookText{
+  float: left;
+}
+.bookName{
+  height: 30px;
+  line-height: 30px;
+}
+.no01{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #d32f2f;
+  color: white;
+}
+.bookAuthor{
+  height: 20px;
+  line-height: 20px;
+  margin-left: 30px;
+}
+.bookAuthor a{
+  font-size: 12px;
+  color: #999;
+}
+.bookCategory{
+  height: 30px;
+  line-height: 30px;
+  margin-left: 30px;
+}
+.bookCategory a{
+  color: #999;
+}
+.monthlyVotes{
+  height: 20px;
+  line-height: 20px;
+  font-size: 13px;
+  margin-left: 30px;
+}
+/* 鍥剧墖鍙虫诞鍔� */
+.bookImg{
+  float: right;
+}
+.booksNo_02{
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #e6e6e6;
+}
+.no02{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #fc7403;
+  color: white;
+}
+.monthlyVotesRight{
+  font-size: 13px;
+  color: #999;
+  float: right;
+}
+.no03{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #f8cc1c;
+  color: white;
+}
+.no04{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #fafafa;
+  color: #999;
+}
+/* 鍘绘帀鏈�鍚庝竴琛岀殑涓嬭竟妗� */
+.booksNo_02:last-child{
+  border-bottom: none;
+}

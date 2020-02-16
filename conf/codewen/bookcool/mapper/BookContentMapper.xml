@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="codewen.bookcool.mapper.BookContentMapper">
+<cache/>
+    
+    <!-- //增加章节
+    public boolean addBookContent(BookContent bc); -->
+    <insert id="addBookContent" parameterType="codewen.bookcool.entity.BookContent">
+        insert into bookscontent(bcname,bcchapter,bccontent,bc_bnum,chapter_num)
+        values(#{bcname},#{bcchapter},#{bccontent},#{bc_bnum},#{chapter_num})
+    </insert>
+    
+    <!-- 可重用的查询sql -->
+    <sql id="queryByCount">
+        select count(1) from bookscontent
+    </sql>
+    
+    <!-- //通过bc_bnum查询书籍是否有内容
+    public boolean queryBookContentIsExist(int bc_bnum); -->
+    <select id="queryBookContentIsExist" parameterType="int" resultType="Boolean">
+        <include refid="queryByCount"/>
+        <where>
+            bc_bnum=#{bc_bnum}
+        </where>
+    </select>
+    
+    <!-- //根据bc_bnum和chapter_num查询章节
+    public BookContent queryBookContent(@Param("bc_bnum")int bc_bnum, 
+            @Param("chapter_num")int chapter_num); -->
+    <select id="queryBookContent" resultType="codewen.bookcool.entity.BookContent">
+        select * from bookscontent
+        <where>
+            bc_bnum=#{bc_bnum} and chapter_num=#{chapter_num}
+        </where>
+    </select>
+    
+    <!-- //根据bc_bnum查询总章节数
+    public int queryBookContentTotal(int bc_bnum); -->
+    <select id="queryBookContentTotal" parameterType="int" resultType="int">
+        <include refid="queryByCount"/>
+        <where>
+            bc_bnum=#{bc_bnum}
+        </where>
+    </select>
+    
+    <!-- //根据bc_bnum返回章节目录
+    public List<BookContent> queryBookCatalog(int bc_bnum); -->
+    <select id="queryBookCatalog" parameterType="Integer" resultType="codewen.bookcool.entity.BookContent">
+        select chapter_num,bcchapter from bookscontent
+        <where>
+            bc_bnum=#{bc_bnum}
+        </where>
+    </select>
+    
+</mapper>

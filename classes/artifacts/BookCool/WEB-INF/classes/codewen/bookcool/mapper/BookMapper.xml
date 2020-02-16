@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="codewen.bookcool.mapper.BookMapper">
+<cache/>
+
+    <!-- //增加书籍方法
+    public boolean addBook(Book book); -->
+    <insert id="addBook" parameterType="codewen.bookcool.entity.Book">
+        insert into books(bname,bauthor,bintroduction,bimg,bcategory,bnum,totalwords) 
+        values(#{bname},#{bauthor},#{bintroduction},#{bimg},#{bcategory},#{bnum},#{totalwords})
+    </insert>
+    
+    <!-- //删除书籍的方法 通过bnum来删除
+    public boolean deleteBook(int bnum); -->
+    <delete id="deleteBook" parameterType="int">
+        delete from books where bnum=#{bnum}
+    </delete>
+
+    <!-- // 修改书本信息的方法 通过book来修改书籍信息
+    public boolean updateBook(Book book); -->
+    <update id="updateBook" parameterType="codewen.bookcool.entity.Book">
+        update books 
+        <set>
+            <if test="bname!=null and bname!=''">
+                bname=#{bname},
+            </if>
+            <if test="bauthor!=null and bauthor!=''">
+                bauthor=#{bauthor},
+            </if>
+            <if test="bintroduction!=null and bintroduction!=''">
+                bintroduction=#{bintroduction},
+            </if>
+            <if test="bimg!=null and bimg!=''">
+                bimg=#{bimg},
+            </if>
+            <if test="bcategory!=null and bcategory!=''">
+               bcategory=#{bcategory},
+            </if>    
+            <if test="readtimes!=null and readtimes!=0">
+               readtimes=#{readtimes},
+            </if>
+            <if test="totalwords!=null and totalwords!=0">
+               totalwords=#{totalwords},
+            </if>
+            <if test="collectiontimes!=null and collectiontimes!=0">
+               collectiontimes=#{collectiontimes},
+            </if>
+        </set>
+        <where>
+            bnum=#{bnum}
+        </where>
+    </update>
+
+    <!-- 可重用的查询所有书的sql -->
+    <sql id="queryAllBook">
+        select * from books
+    </sql>
+    
+    <!-- // 通过bnum查询该书籍
+    public Book queryBookBybnum(int bnum); -->
+    <select id="queryBookBybnum" parameterType="int" resultType="codewen.bookcool.entity.Book">
+        <include refid="queryAllBook"/>
+        <where>
+            bnum=#{bnum}
+        </where>
+    </select>
+    
+    <!-- 可重用的通过书籍参数查询sql -->
+    <sql id="queryBookCondition">
+        <!-- 先判断Map集合是否为空然后再判断value是否为空 -->
+        <if test="parameterMap !=null ">
+            <where>
+                <!-- 多字段模糊查询参数 -->
+	            <if test="parameterMap.fparam !=null and parameterMap.fparam !='' ">
+	                <bind name="bindfparam" value=" '%'+ parameterMap.fparam +'%' "/>
+                    concat(bname,bauthor,bcategory) like #{bindfparam}
+	            </if>
+	            <!-- 种类 -->
+	            <if test="parameterMap.bcategory !=null and parameterMap.bcategory !='' ">
+                    and bcategory=#{parameterMap.bcategory}
+	            </if>
+            </where>
+        </if>
+    </sql>
+    
+    <!-- //查询书籍数
+    public int queryTotalBook(@Param("parameterMap")Map<String, String> parameterMap); -->
+    <select id="queryTotalBook" resultType="int">
+        select count(1) from books
+        <include refid="queryBookCondition"/>
+    </select>
+    
+    <!-- //查询一页书籍(可排行)
+    public List<Book> queryBookByPage(@Param("currentpage")int currentpage
+            ,@Param("pagesize")int pagesize
+            ,@Param("parameterMap")Map<String, String> parameterMap
+            ,@Param("conditionMap")Map<String, String> conditionMap); -->
+    <select id="queryBookByPage" resultType="codewen.bookcool.entity.Book">
+        select * from 
+        <!-- a表是多字段模糊查询的结果表 -->
+        (<include refid="queryAllBook"/> <include refid="queryBookCondition"/>) a
+        <!-- 降序排序处理 -->
+        <if test="conditionMap !=null">
+            <trim prefix="ORDER BY" suffixOverrides="," suffix="desc">
+	            <!-- 时间排序 -->
+	            <if test="conditionMap.byTime !=null and conditionMap.byTime !='' ">
+	                btime,
+	            </if>
+	            <!-- 字数排序 -->
+	            <if test="conditionMap.byWord !=null and conditionMap.byWord !='' ">
+	                totalwords,     
+	            </if>
+	            <!-- 阅读数排序 -->
+	            <if test="conditionMap.byRead !=null and conditionMap.byRead !='' ">
+                    readtimes,     
+                </if>
+                <!-- 收藏数排序 -->
+                <if test="conditionMap.byCollect !=null and conditionMap.byCollect !='' ">
+                    collectiontimes,     
+                </if>
+            </trim>
+        </if>
+        limit #{currentpage},#{pagesize}
+    </select>
+    
+</mapper>

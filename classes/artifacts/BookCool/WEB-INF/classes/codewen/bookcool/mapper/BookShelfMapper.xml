@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="codewen.bookcool.mapper.BookShelfMapper">
+<cache readOnly="true"/>
+
+    <!-- //将书籍加入到书架
+    public boolean addBookToBookShelf(@Param("bs_account")String bs_account,  
+            @Param("bs_bnum")int bs_bnum); -->
+    <insert id="addBookToBookShelf" parameterType="codewen.bookcool.entity.BookShelf">
+        insert into bookshelf(bs_bnum,bs_account) values(#{bs_bnum},#{bs_account})
+    </insert>
+
+    <!-- //删除书架中的书籍方法  通过bs_account和bs_bnum来删除
+    public boolean deleteBookFromBookShelf(@Param("bs_account")String bs_account,  
+            @Param("bs_bnum")int bs_bnum); -->
+    <delete id="deleteBookFromBookShelf">  
+        delete from bookshelf 
+        <where>
+            bs_account=#{bs_account} and bs_bnum=#{bs_bnum}
+        </where>
+    </delete>
+
+    <!-- //通过bs_account和bs_bnum判断书架中是否有该书
+    public boolean queryBookShelfIsExist(@Param("bs_account") String bs_account,
+            @Param("bs_bnum") int bs_bnum); -->
+    <select id="queryBookShelfIsExist" resultType="Boolean">
+        select count(1) from bookshelf
+        <where>
+            bs_account=#{bs_account}
+            <if test="bs_bnum !=null and bs_bnum !=0 ">
+                and bs_bnum=#{bs_bnum}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 可重用的根据条件查询书架的sql -->
+    <sql id="queyrBookShelfByCondition">
+        <if test="parameterMap !=null">
+            ,books
+        </if>
+        <where>
+            <if test="bs_account !=null and bs_account!='' ">
+                and bs_account=#{bs_account}
+            </if>
+            <if test="parameterMap !=null">
+                <!-- 用于多表查询 -->
+                and bs_bnum=bnum
+                <if test="parameterMap.bname !=null and parameterMap.bname !='' ">
+                    <bind name="bindbname" value=" '%'+parameterMap.bname[0]+'%' "/>
+                    and bname like #{bindbname}
+                </if>
+                <if test="parameterMap.bauthor !=null and parameterMap.bauthor !='' ">
+                    <bind name="bindbauthor" value=" '%'+parameterMap.bauthor[0]+'%' "/>
+                    and bauthor like #{bindbauthor}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <!-- //通过bs_account查询(条件)该用户书架中有多少本书
+    public int queryBookShelfTotalBook(@Param("bs_account")String bs_account,
+            @Param("parameterMap")Map<String, String[]> parameterMap); -->
+    <select id="queryBookShelfTotalBook" resultType="Integer">
+        select count(1) from bookshelf
+        <include refid="queyrBookShelfByCondition"/>
+    </select>
+    
+    <!-- // 通过bs_account查询该用户书架中的书(关联查询，关联Book类)
+    public List<BookShelf> queryBookShelfBybsaccount(@Param("bs_account")String bs_account, 
+            @Param("currentpage")int currentpage,@Param("pagesize")int pagesize,
+            @Param("parameterMap")Map<String, String[]> parameterMap); -->
+    <select id="queryBookShelfBybsaccount" resultMap="queryBookShelfBybnumMap">
+        select * from bookshelf
+        <include refid="queyrBookShelfByCondition"/>
+        limit #{currentpage},#{pagesize}
+    </select>
+    <resultMap type="codewen.bookcool.entity.BookShelf" id="queryBookShelfBybnumMap">
+        <id property="bsid" column="bsid"/>
+        <result property="bs_bnum" column="bs_bnum"/>
+        <result property="bs_account" column="bs_account"/>
+        <result property="bstime" column="bstime"/>
+        <!-- 关联book表的外键(利用分步查询并全局配置懒加载，实现懒加载) -->
+        <association property="book" javaType="codewen.bookcool.entity.Book"
+            select="codewen.bookcool.mapper.BookMapper.queryBookBybnum" column="bs_bnum"/>
+    </resultMap>
+
+</mapper>

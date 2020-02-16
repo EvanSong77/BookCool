@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="codewen.bookcool.mapper.UserMapper">
+<cache/>
+
+    <!-- //增加用户方法
+    public boolean addUser(User user); -->
+    <insert id="addUser" parameterType="codewen.bookcool.entity.User">
+        insert into users(uaccount,upwd,usex,uage,uemail,utel,uaddress,uintroduction) 
+        values(#{uaccount},#{upwd},#{usex},#{uage},#{uemail},#{utel},#{uaddress},#{uintroduction})
+    </insert>
+    
+    <!-- // 删除用户的方法 通过uaccount来删除
+    public boolean deleteUser(String uaccount); -->
+    <delete id="deleteUser" parameterType="String">
+        delete from users where uaccount=#{uaccount}
+    </delete>
+    
+    <!-- // 修改用户信息的方法 通过user来修改用户信息
+    public boolean updateUser(User user); -->
+    <update id="updateUser" parameterType="codewen.bookcool.entity.User">
+        update users 
+        <set>
+            <if test="upwd!=null and upwd!=''">
+                upwd=#{upwd},
+            </if>
+            <if test="usex!=null and usex!=''">
+                usex=#{usex},
+            </if>
+            <if test="uage!=null and uage>0">
+                uage=#{uage},
+            </if>
+            <if test="uemail!=null and uemail!=''">
+                uemail=#{uemail},
+            </if>
+            <if test="utel!=null and utel!=''">
+                utel=#{utel},
+            </if>
+	        <if test="uaddress!=null and uaddress!=''">
+	           uaddress=#{uaddress},
+	        </if>    
+	        <if test="uintroduction!=null and uintroduction!=''">
+	           uintroduction=#{uintroduction}
+	        </if>
+        </set>
+        <where>
+            uaccount=#{uaccount}
+        </where>
+    </update>
+    
+    <!-- 可重用的查询所有用户的sql -->
+    <sql id="queryAllUser">
+         select * from users
+    </sql>
+    
+    <!-- // 通过uaccount查询该用户
+    public User queryUserByuaccount(String uaccount); -->
+    <select id="queryUserByuaccount" parameterType="String" resultType="codewen.bookcool.entity.User">
+        <include refid="queryAllUser"/>
+        <where>
+	        uaccount=#{uaccount}
+        </where>
+    </select>
+
+    <!-- 可重用的通过用户参数查询sql -->
+    <sql id="queryUserCondition">
+        <!-- 先判断Map集合是否为空然后再判断value是否为空 -->
+        <if test="parameterMap !=null ">
+	        <where>
+	         <if test="parameterMap.uaccount !=null and parameterMap.uaccount !='' ">
+	             <bind name="binduaccount" value=" '%'+ parameterMap.uaccount[0] +'%' "/>
+	             and uaccount LIKE #{binduaccount}
+	         </if>
+	         <if test="parameterMap.uaddress !=null and parameterMap.uaddress !='' ">
+	             <bind name="binduaddress" value=" '%'+ parameterMap.uaddress[0] +'%' "/>
+	             and uaddress LIKE #{binduaddress}
+	         </if>
+	         <if test="parameterMap.role !=null and parameterMap.role !='' ">
+	            <bind name="bindrole" value=" '%'+ parameterMap.role[0] +'%' "/>
+	            and role LIKE #{bindrole}
+	         </if>
+	        </where>
+        </if>
+        
+    </sql>    
+    
+    <!-- //查询用户个数
+    public int queryTotalUser(@Param("parameterMap")Map<String, String[]> parameterMap); -->
+    <select id="queryTotalUser" resultType="int">
+        select count(1) from users
+        <include refid="queryUserCondition"/>
+    </select>
+    
+    <!-- //查询一页用户
+    public List<User> queryUserByPage(@Param("currentpage")int currentpage,@Param("pagesize")int pagesize); -->
+    <select id="queryUserByPage" resultType="codewen.bookcool.entity.User">
+        <include refid="queryAllUser"/>
+        <include refid="queryUserCondition"/>
+        limit #{currentpage},#{pagesize}
+    </select>    
+
+</mapper>

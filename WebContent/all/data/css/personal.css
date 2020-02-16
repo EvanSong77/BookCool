@@ -1,0 +1,90 @@
+/* 璁剧疆缁熶竴涓棿 */
+.w {
+  width: 1170px;
+  margin: 0 auto;
+}
+
+/* 缁熶竴璁剧疆瓒呴摼鎺ユ牱寮� */
+
+/* 娓呴櫎娴姩 */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+  /* 鍏煎IE6 */
+  zoom: 1;
+}
+
+.col-center-block {  
+  float: none;  
+  display: block;  
+  margin-left: auto;  
+  margin-right: auto;  
+}  
+
+.same {
+  width: 800px;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+label {
+  display: inline-block;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  color: #999;
+}
+
+#um {
+  width: 300px;
+  height: 40px;
+  padding: 5px 10px;
+}
+
+.s1 {
+  color: #999;
+}
+
+#email {
+  width: 300px;
+  height: 40px;
+  padding: 5px 10px;
+}
+
+.label_1 {
+  color: black;
+}
+
+#year {
+  width: 95px;
+  height: 30px;
+}
+
+#month {
+  width: 95px;
+  height: 30px;
+}
+
+#phone {
+  width: 300px;
+  height: 40px;
+  padding: 5px 10px;
+}
+
+#address {
+  width: 300px;
+  height: 40px;
+  padding: 5px 10px;
+}
+
+#info {
+  margin-top: -20px;
+  margin-left: 85px;
+  background-color: #fafafa;
+}
+
+

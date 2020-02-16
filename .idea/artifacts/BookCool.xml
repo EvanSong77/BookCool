@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="BookCool">
+    <output-path>$PROJECT_DIR$/classes/artifacts/BookCool</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="BookCool" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="junit4" module-name="BookCool" />
+          <element id="library" level="module" name="log4j-1.2.17.jar" module-name="BookCool" />
+          <element id="library" level="module" name="mybatis-3.5.2.jar" module-name="BookCool" />
+          <element id="library" level="module" name="mysql-connector-java-5.1.38.jar" module-name="BookCool" />
+          <element id="library" level="module" name="jstl-1.2.jar" module-name="BookCool" />
+          <element id="library" level="module" name="commons-beanutils-1.8.3.jar" module-name="BookCool" />
+          <element id="library" level="module" name="commons-logging-1.2.jar" module-name="BookCool" />
+          <element id="library" level="module" name="standard-1.1.2.jar" module-name="BookCool" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="BookCool/web/Web" />
+    </root>
+  </artifact>
+</component>

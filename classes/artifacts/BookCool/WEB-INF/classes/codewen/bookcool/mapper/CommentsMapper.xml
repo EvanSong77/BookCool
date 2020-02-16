@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="codewen.bookcool.mapper.CommentsMapper">
+
+    <!-- //增加评论
+    public boolean addComments(Comments comments); -->
+    <insert id="addComments" parameterType="codewen.bookcool.entity.Comments">
+        insert into comments(c_bnum,c_account,c_to_account,ccontent,ctime,ctype)
+        values(#{c_bnum},#{c_account},#{c_to_account},#{ccontent},#{ctime},#{ctype})
+    </insert>
+    
+    <!-- //根据cid删除评论
+    public boolean deleteComments(int cid); -->
+    <delete id="deleteComments" parameterType="int">
+        delete from comments 
+        <where>
+            cid=#{cid}
+        </where>
+    </delete>
+
+    <!-- //修改评论的状态(评论审核通过) 通过时间updatetime和cid
+    public boolean updateComments(@Param("cid")Integer cid, @Param("updatetime")String updatetime); -->
+    <update id="updateComments">
+        update comments 
+        <set>
+	        state=1,
+	        updatetime=#{updatetime}
+        </set>
+        <where>
+            cid=#{cid}
+        </where>
+    </update>
+
+    <!-- //根据c_bnum(书籍编号)查询该书籍的总评论数
+    public int queryCommentsTotal(int c_bnum); -->
+    <select id="queryCommentsTotal" parameterType="int" resultType="int">
+        select count(1) from comments
+        <if test="c_bnum >0">
+            <where>
+                c_bnum=#{c_bnum}
+            </where>
+        </if>
+    </select>
+    
+    <!-- //根据c_bnum查询该书一页评论(c_bnum>0查询该书一页评论，=0查询所有一页评论)
+    public List<Comments> queryComments(@Param("c_bnum")int c_bnum,
+            @Param("currentpage")int currentpage, @Param("pagesize")int pagesize); -->
+    <select id="queryComments" resultType="codewen.bookcool.entity.Comments">
+        select * from comments
+        <if test="c_bnum >0">
+            <where>
+                c_bnum=#{c_bnum} and state=1
+            </where>
+        </if>
+        limit #{currentpage},#{pagesize}
+    </select>
+
+</mapper>
