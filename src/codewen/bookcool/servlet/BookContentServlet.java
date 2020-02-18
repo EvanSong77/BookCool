@@ -71,13 +71,13 @@ public class BookContentServlet extends HttpServlet {
 		int bookcontentTotal = bcs.queryBookContentTotal(bc_bnum);
 		List<BookContent> bookCatalogList = bcs.queryBookCatalog(bc_bnum);
 		request.setAttribute("bookContent", bookContent);
-		if(bookCatalogList!=null) {
+		if(bookCatalogList!=null && bookCatalogList.size() > 0) {
 			request.setAttribute("bookcontentTotal", bookcontentTotal);
 			request.setAttribute("bookCatalogList", bookCatalogList);
 		}else {
-			request.setAttribute("bc_bnum", bc_bnum);
 			request.setAttribute("chapter_num", chapter_num);
 		}
+		request.setAttribute("bc_bnum", bc_bnum);
 		request.setAttribute("collectiontimes", collectiontimes);
 		request.getRequestDispatcher("jsp/bookcontent.jsp").forward(request, response);
 	}
